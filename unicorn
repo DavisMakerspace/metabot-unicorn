@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+SOCKET = '/usr/local/opt/ircnotify/run/dmsnotify'
+UNICORNS = 'unicorns'
+
+require 'json'
+require 'socket'
+
+rand = Random.new
+conn = UNIXSocket.new SOCKET
+conn.puts({set_name: 'unicorn'}.to_json)
+conn.puts({set_commands:['unicorn']}.to_json)
+
+conn.each do |msg|
+  filenames = []
+  Dir.glob(File.join(UNICORNS, '*.txt')) do |filename|
+    filenames << filename
+  end
+  filename = filenames[rand.rand(filenames.size)-1]
+  File.new(filename).each do |line|
+    conn.puts({send: line.chomp}.to_json)
+  end
+end
