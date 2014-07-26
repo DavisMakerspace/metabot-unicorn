@@ -1,0 +1,1 @@
+SOCKET = UNIXSocket.new '/path/to/metabot.sock'

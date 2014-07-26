@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
 require 'socket'
-SOCKET = UNIXSocket.new '/path/to/metabot.sock'
-UNICORNS = 'unicorns'
+require_relative 'config'
+UNICORNS = "#{File.dirname $0}/unicorns"
 
 rand = Random.new
 SOCKET.puts 'name unicorn'
