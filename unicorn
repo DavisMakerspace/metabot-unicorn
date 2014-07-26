@@ -1,21 +1,19 @@
 #!/usr/bin/env ruby
 
-#SOCKET = '/usr/local/opt/ircnotify/run/dmsnotify'
-SOCKET = '../ircnotify/mrtest'
+require 'socket'
+SOCKET = UNIXSocket.new '/path/to/metabot.sock'
 UNICORNS = 'unicorns'
 
-require 'json'
-require 'socket'
-
 rand = Random.new
-conn = UNIXSocket.new SOCKET
-conn.puts({set_name: 'unicorn'}.to_json)
-conn.puts({set_commands:['unicorn']}.to_json)
+SOCKET.puts 'name unicorn'
+SOCKET.puts 'cmds unicorn'
 
-conn.each do |msg|
-  filenames = Dir.glob(File.join(UNICORNS, '*.txt'))
-  filename = filenames[rand.rand(filenames.size)-1]
-  File.new(filename).each do |line|
-    conn.puts({send: line.chomp}.to_json)
+SOCKET.each do |msg|
+  if msg =~ /^CMD /
+    filenames = Dir.glob File.join UNICORNS, '*.txt'
+    filename = filenames[rand.rand(filenames.size)-1]
+    File.new(filename).each do |line|
+      SOCKET.puts "send :#{line.chomp}"
+    end
   end
 end
