@@ -6,7 +6,7 @@ UNICORNS = "#{File.dirname $0}/unicorns"
 
 rand = Random.new
 SOCKET.puts 'name unicorn'
-SOCKET.puts 'cmds unicorn'
+SOCKET.puts 'addcmd unicorn :magic'
 
 SOCKET.each do |msg|
   if msg =~ /^CMD /
